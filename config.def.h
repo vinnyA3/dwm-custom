@@ -8,8 +8,8 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const int horizpadbar        = 2;        /* horizontal padding for statusbar */
 static const int vertpadbar         = 12;        /* vertical padding for statusbar */
-static const char *fonts[]          = { "Siji:size=9", "GohuFont:size=10" };
-static const char dmenufont[]       = "GohuFont:size=10";
+static const char *fonts[]          = { "Siji:size=9", "GohuFont:size=9" };
+static const char dmenufont[]       = "GohuFont:size=9";
 static char col_gray1[]       = "#222222";
 static char col_gray2[]       = "#444444";
 static char col_gray3[]       = "#bbbbbb";
