@@ -35,6 +35,7 @@
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
+#include <X11/Xresource.h>
 #include <X11/Xutil.h>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
@@ -56,6 +57,12 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define XRDB_LOAD_COLOR(R,V)    if (XrmGetResource(xrdb, R, NULL, &type, &value) == True) { \
+                                  if (value.addr != NULL && strnlen(value.addr, 8) == 7 && value.addr[0] == '#') { \
+                                    strncpy(V, value.addr, 7); \
+                                    V[7] = '\0'; \
+                                  } \
+                                }
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
@@ -177,6 +184,7 @@ static void grabkeys(void);
 static void incnmaster(const Arg *arg);
 static void keypress(XEvent *e);
 static void killclient(const Arg *arg);
+static void loadxrdb(void);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
@@ -1015,6 +1023,29 @@ killclient(const Arg *arg)
 }
 
 void
+loadxrdb()
+{
+  int i = 0;
+  char *resm;
+  XrmDatabase xrdb;
+
+  XrmInitialize();
+  resm = XResourceManagerString(dpy);
+
+  xrdb = XrmGetStringDatabase(resm);
+
+  if (xrdb != NULL && !!resm) {
+    char *type;
+    XrmValue value;
+    XRDB_LOAD_COLOR("*dwm.colgray1", col_gray1)
+    XRDB_LOAD_COLOR("*dwm.colgray2", col_gray2)
+    XRDB_LOAD_COLOR("*dwm.colgray3", col_gray3)
+    XRDB_LOAD_COLOR("*dwm.colgray4", col_gray4)
+    XRDB_LOAD_COLOR("*dwm.colcyan", col_cyan)
+  }
+}
+
+void
 manage(Window w, XWindowAttributes *wa)
 {
 	Client *c, *t = NULL;
@@ -1568,8 +1599,10 @@ setup(void)
 	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
 	/* init appearance */
 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
-	for (i = 0; i < LENGTH(colors); i++)
-		scheme[i] = drw_scm_create(drw, colors[i], 3);
+  /* load xrdb colors */
+  loadxrdb();
+  for (i = 0; i < LENGTH(colors); i++)
+    scheme[i] = drw_scm_create(drw, colors[i], 3);
 	/* init bars */
 	updatebars();
 	updatestatus();
