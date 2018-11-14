@@ -1075,11 +1075,11 @@ loadxrdb()
   if (xrdb != NULL && !!resm) {
     char *type;
     XrmValue value;
-    XRDB_LOAD_COLOR("*background", col_gray1)
-    XRDB_LOAD_COLOR("*color0", col_gray2)
-    XRDB_LOAD_COLOR("*foreground", col_gray3)
-    XRDB_LOAD_COLOR("*color0", col_gray4)
-    XRDB_LOAD_COLOR("*color4", col_cyan)
+    XRDB_LOAD_COLOR("*dwm.colgray1", col_gray1)
+    XRDB_LOAD_COLOR("*dwm.colgray2", col_gray2)
+    XRDB_LOAD_COLOR("*dwm.colgray3", col_gray3)
+    XRDB_LOAD_COLOR("*dwm.colgray4", col_gray4)
+    XRDB_LOAD_COLOR("*dwm.colcyan", col_cyan)
   }
 }
 
