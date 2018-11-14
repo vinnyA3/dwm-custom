@@ -1,4 +1,5 @@
 patches/
 *.o
 *.diff
+dwm
 config.h
